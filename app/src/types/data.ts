@@ -1,4 +1,4 @@
-// Tipos de los archivos de public/data/: contrato de datos (v0.6) entre el pipeline de Python y la app.
+// Tipos de los archivos de public/data/: contrato de datos (v0.9) entre el pipeline de Python y la app.
 // Cualquier cambio se hace primero en el contrato y luego aquí (y en src/data/schemas.ts).
 
 import type { FeatureCollection, MultiPolygon, Polygon } from "geojson";
@@ -219,3 +219,78 @@ export interface RuralProps {
   area_km2: number;
 }
 export type RuralGeoJSON = FeatureCollection<Polygon | MultiPolygon, RuralProps>;
+
+// ---------- ficha.json (v0.9) ----------
+// Contexto descriptivo del detalle de cada AGEB: no entra al modelo ni cambia la lista. Proporciones 0–1.
+export type GrupoComposicion =
+  | "efectivo_barrio"
+  | "efectivo_formal"
+  | "comercio_menor"
+  | "comercio_mayor"
+  | "manufactura"
+  | "alojamiento_alim"
+  | "serv_prof_fin"
+  | "serv_salud_educ"
+  | "serv_otros"
+  | "otros";
+// Giros de alto efectivo (los dos grupos de arriba, desglosados)
+export type GiroEfectivo =
+  | "abarrotes"
+  | "alim_otros"
+  | "minisuper"
+  | "licores"
+  | "farmacias"
+  | "gasolineras"
+  | "restaurantes"
+  | "bares"
+  | "empeno_cambio"
+  | "tortillerias";
+// Censo 2020 (mismos indicadores que Vulnerabilidad); null si INEGI lo suprimió por confidencialidad
+export interface CensoFicha {
+  escolaridad: number | null;
+  pct_sin_basica: number | null;
+  pct_sin_salud: number | null;
+  pct_sin_internet: number | null; // VPH_INTER sobre TVIVPARHAB
+}
+// Número de negocios en el DENUE 2019-11 y 2024-11 (actividad de 2018 y 2023), y los que salieron o entraron por id
+export interface DinamicaFicha {
+  antes: number;
+  despues: number;
+  salidas: number;
+  entradas: number;
+}
+export interface FichaAgeb {
+  composicion: Record<GrupoComposicion, number>; // parte de los establecimientos (DENUE 2023-11) en cada grupo de giro
+  efectivo: Partial<Record<GiroEfectivo, number>>; // solo los giros presentes
+  personal_ocupado: number; // estimado con el punto medio del estrato
+  pct_grandes: number; // establecimientos de 51 personas o más
+  densidad: number; // establecimientos por km²
+  pct_densidad: number; // 0–1: parte de las AGEB con menor densidad
+  censo: CensoFicha;
+  dinamica?: DinamicaFicha; // falta en 6 AGEB sin negocios en alguno de los cortes
+}
+export interface IndicadorEnsu {
+  valor: number;
+  ee: number;
+  rank: number; // 1 = la alcaldía con el valor más alto de las 16
+}
+export interface FichaAlcaldia {
+  envipe: { denuncia: number; ee: number; contraida: number; contraida_ic: [number, number] }; // 04e, ediciones 2021–2025
+  ensu: Record<"inseg_ciudad" | "inseg_calle" | "inseg_mercado" | "hog_vict_robo", IndicadorEnsu>; // promedio del año
+}
+export interface Ficha {
+  ciudad: {
+    composicion: Record<GrupoComposicion, number>;
+    efectivo: Record<GiroEfectivo, number>;
+    pct_grandes: number;
+    densidad_mediana: number;
+    censo: CensoFicha;
+    dinamica: DinamicaFicha;
+    cambio_mediano: number; // mediana por AGEB de despues / antes − 1
+    envipe_denuncia: number;
+    envipe_p_iguales: number; // p de la prueba "todas las alcaldías denuncian igual"
+    anio_ensu: number;
+  };
+  agebs: { [cvegeo: string]: FichaAgeb };
+  alcaldias: { [cve_mun: string]: FichaAlcaldia };
+}

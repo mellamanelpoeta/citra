@@ -3,6 +3,7 @@ import { etiquetaPeriodo, metricaDe } from "../lib/derivados";
 import { AVISO_SIN_VIOLENCIA, COLOR_ACIERTO, COLOR_AVISO, COLOR_FALLO, COLOR_NUEVO, decimal, entero, nombrePropio, porcentaje } from "../lib/format";
 import { useApp } from "../lib/store";
 import type { ZonaValidacion } from "../types/data";
+import FichaAgeb from "./FichaAgeb";
 import MiniTendencia from "./MiniTendencia";
 import { Dato, InsigniaCategoria, Seccion, Tarjeta } from "./ui";
 
@@ -125,27 +126,13 @@ export default function PanelAgeb({ id }: { id: string }) {
             />
           </Seccion>
 
-          <Seccion titulo="Actividad económica">
-            <div className="grid grid-cols-2 gap-2">
-              <Dato etiqueta="Establecimientos" valor={entero(m.establecimientos)} nota="DENUE" />
-              <Dato etiqueta="Población 2020" valor={entero(props?.poblacion_2020 ?? 0)} nota="Censo" />
-            </div>
-            <div className="mt-2">
-              <div className="mb-1 flex justify-between text-[11px] text-slate-400">
-                <span>Giros intensivos en efectivo</span>
-                <span className="tabular-nums text-slate-200">{porcentaje(m.pct_efectivo)}</span>
-              </div>
-              <div className="h-2 overflow-hidden rounded-full bg-white/10">
-                <div className="h-full rounded-full bg-amber-500" style={{ width: `${m.pct_efectivo * 100}%` }} />
-              </div>
-            </div>
-          </Seccion>
-
           {m.delito_dominante && (
             <Seccion titulo="Delito dominante">
               <div className="text-sm text-slate-200">{m.delito_dominante}</div>
             </Seccion>
           )}
+
+          <FichaAgeb id={id} conComparacion />
         </>
       )}
     </div>
@@ -161,12 +148,11 @@ const RESULTADO = {
 };
 
 function Prueba({ z, porConteo }: { z: ZonaValidacion; porConteo: boolean }) {
-  const { validacion, metrics } = useData();
+  const { validacion } = useData();
   const anio = validacion.anio;
   const enLista = porConteo ? z.en_lista_conteo : z.en_lista_riesgo;
   const rank = porConteo ? z.rank_conteo : z.rank_riesgo;
   const r = RESULTADO[enLista ? (z.mas_de_lo_esperado ? "acierto" : "falsa") : z.mas_de_lo_esperado ? "omitida" : "nada"];
-  const m = metrics[z.cvegeo].anticipado;
   return (
     <>
       <div className="mt-2 flex flex-wrap items-center gap-2">
@@ -207,12 +193,7 @@ function Prueba({ z, porConteo }: { z: ZonaValidacion; porConteo: boolean }) {
         />
       </Seccion>
 
-      <Seccion titulo="Actividad económica">
-        <div className="grid grid-cols-2 gap-2">
-          <Dato etiqueta="Establecimientos" valor={entero(m.establecimientos)} nota="DENUE" />
-          <Dato etiqueta="Giros intensivos en efectivo" valor={porcentaje(m.pct_efectivo)} nota="DENUE" />
-        </div>
-      </Seccion>
+      <FichaAgeb id={z.cvegeo} conComparacion={false} />
     </>
   );
 }

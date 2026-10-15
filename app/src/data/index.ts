@@ -12,6 +12,7 @@ import type {
   ColoniaProps,
   Colonias,
   ColoniasGeoJSON,
+  Ficha,
   Giros,
   Meta,
   Prioridad,
@@ -35,6 +36,7 @@ export interface AppData {
   coloniasMetrics: ZonaMetrics;
   rural: RuralGeoJSON;
   validacion: Validacion;
+  ficha: Ficha;
   // Índices derivados (no forman parte del contrato).
   agebPorId: Map<string, AgebProps>;
   bboxPorAgeb: Map<string, BBox>;
@@ -61,6 +63,7 @@ const ARCHIVOS = {
   coloniasMetrics: "colonias_metrics.json",
   rural: "fuera_analisis.geojson",
   validacion: "validacion.json",
+  ficha: "ficha.json",
 } as const;
 
 async function leer(archivo: string): Promise<unknown> {
@@ -86,6 +89,7 @@ async function validar(datos: Record<keyof typeof ARCHIVOS, unknown>) {
     coloniasMetrics: s.zonaMetricsSchema,
     rural: s.ruralGeoSchema,
     validacion: s.validacionSchema,
+    ficha: s.fichaSchema,
   };
   for (const clave of Object.keys(esquemas) as (keyof typeof esquemas)[]) {
     const r = esquemas[clave].safeParse(datos[clave]);

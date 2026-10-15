@@ -12,6 +12,7 @@ import {
   alcaldiasGeoSchema,
   coloniasGeoSchema,
   coloniasSchema,
+  fichaSchema,
   girosSchema,
   metaSchema,
   prioridadesSchema,
@@ -34,6 +35,7 @@ const archivos = {
   "colonias_metrics.json": zonaMetricsSchema,
   "fuera_analisis.geojson": ruralGeoSchema,
   "validacion.json": validacionSchema,
+  "ficha.json": fichaSchema,
 };
 
 let errores = 0;

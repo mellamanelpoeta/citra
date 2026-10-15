@@ -7,6 +7,7 @@ import { z } from "zod";
 import type {
   AgebGeoJSON,
   AgebMetrics,
+  Ficha,
   AlcaldiasGeoJSON,
   Colonias,
   ColoniasGeoJSON,
@@ -226,6 +227,59 @@ export const girosSchema = z.array(
   }),
 );
 
+// ---------- ficha.json (v0.9) ----------
+const GRUPOS = ["efectivo_barrio", "efectivo_formal", "comercio_menor", "comercio_mayor", "manufactura", "alojamiento_alim", "serv_prof_fin", "serv_salud_educ", "serv_otros", "otros"] as const;
+const GIROS_EF = ["abarrotes", "alim_otros", "minisuper", "licores", "farmacias", "gasolineras", "restaurantes", "bares", "empeno_cambio", "tortillerias"] as const;
+const composicion = z.record(z.enum(GRUPOS), prob);
+const censoFicha = z.object({
+  escolaridad: z.number().min(0).nullable(),
+  pct_sin_basica: prob.nullable(),
+  pct_sin_salud: prob.nullable(),
+  pct_sin_internet: prob.nullable(),
+});
+const dinamicaFicha = z.object({
+  antes: z.number().int().min(0),
+  despues: z.number().int().min(0),
+  salidas: z.number().int().min(0),
+  entradas: z.number().int().min(0),
+});
+const indicadorEnsu = z.object({ valor: prob, ee: z.number().min(0), rank: z.number().int().min(1).max(16) });
+
+export const fichaSchema = z.object({
+  ciudad: z.object({
+    composicion,
+    efectivo: z.record(z.enum(GIROS_EF), prob),
+    pct_grandes: prob,
+    densidad_mediana: z.number().min(0),
+    censo: censoFicha,
+    dinamica: dinamicaFicha,
+    cambio_mediano: z.number(),
+    envipe_denuncia: prob,
+    envipe_p_iguales: prob,
+    anio_ensu: z.number().int(),
+  }),
+  agebs: z.record(
+    cvegeo,
+    z.object({
+      composicion,
+      efectivo: z.partialRecord(z.enum(GIROS_EF), prob),
+      personal_ocupado: z.number().int().min(0),
+      pct_grandes: prob,
+      densidad: z.number().min(0),
+      pct_densidad: prob,
+      censo: censoFicha,
+      dinamica: dinamicaFicha.optional(),
+    }),
+  ),
+  alcaldias: z.record(
+    z.string().regex(/^\d{3}$/),
+    z.object({
+      envipe: z.object({ denuncia: prob, ee: z.number().min(0), contraida: prob, contraida_ic: z.tuple([prob, prob]) }),
+      ensu: z.object({ inseg_ciudad: indicadorEnsu, inseg_calle: indicadorEnsu, inseg_mercado: indicadorEnsu, hog_vict_robo: indicadorEnsu }),
+    }),
+  ),
+});
+
 // ---------- Alineación esquema ↔ tipos (error de compilación si divergen) ----------
 type Same<A, B> = [A] extends [B] ? ([B] extends [A] ? true : false) : false;
 const assertSame = <T extends true>(_: T) => {};
@@ -236,6 +290,7 @@ assertSame<Same<z.infer<typeof coloniasSchema>, Colonias>>(true);
 assertSame<Same<z.infer<typeof girosSchema>, Giros>>(true);
 assertSame<Same<z.infer<typeof zonaMetricsSchema>, ZonaMetrics>>(true);
 assertSame<Same<z.infer<typeof validacionSchema>, Validacion>>(true);
+assertSame<Same<z.infer<typeof fichaSchema>, Ficha>>(true);
 // La geometría GeoJSON se valida estructuralmente; basta con que sea asignable.
 const _geo = (x: z.infer<typeof agebGeoSchema>): AgebGeoJSON => x;
 const _alc = (x: z.infer<typeof alcaldiasGeoSchema>): AlcaldiasGeoJSON => x;
