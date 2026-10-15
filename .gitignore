@@ -1,14 +1,40 @@
-# El repositorio público contiene solo la app (app/) y su entorno Docker.
-# El análisis (pipeline/, lab/), los documentos de trabajo (docs/) y los datos (data/) se quedan en local.
+# El repositorio público contiene la app (app/) con su entorno Docker y el código de análisis (analisis/).
+# Los datos (data/) no se versionan: se publican aparte y el código los lee desde data/ en la raíz.
+# Los documentos de trabajo (docs/, paper/, slides/, CLAUDE.md) se quedan en local.
 # Los datos que consume la app viven en app/public/data/ y sí se versionan.
-/pipeline/
-/lab/
 /docs/
 /data/
 /slides/
 /paper/
 /CLAUDE.md
 /.claude/
+
+# Análisis: se publica el código; las salidas se regeneran con los scripts.
+/analisis/pipeline/outputs/
+# De la factibilidad solo lo que necesita el resto del código (serie del DENUE para 03_eda; ENSU por alcaldía y su
+# validación contra los tabulados de INEGI).
+/analisis/pipeline/_factibilidad/*
+!/analisis/pipeline/_factibilidad/common.py
+!/analisis/pipeline/_factibilidad/03_denue.py
+!/analisis/pipeline/_factibilidad/ensu_alcaldia.py
+!/analisis/pipeline/_factibilidad/validar_ensu.py
+!/analisis/pipeline/_factibilidad/_xlsx_min.py
+# Del lab solo los scripts que respaldan decisiones y cifras reportadas (sin documentos ni resultados).
+/analisis/lab/*
+!/analisis/lab/lab_comun.py
+!/analisis/lab/s1_variable.py
+!/analisis/lab/lista_giros.py
+!/analisis/lab/s2_s3_denue.py
+!/analisis/lab/s4_2019.py
+!/analisis/lab/decidir.py
+!/analisis/lab/s6_farderos.py
+!/analisis/lab/s7_comun.py
+!/analisis/lab/s7_variable_cadenas.py
+!/analisis/lab/s7_backtest_2025.py
+!/analisis/lab/s7_decidir.py
+!/analisis/lab/mecanismos/
+/analisis/lab/mecanismos/*
+!/analisis/lab/mecanismos/*.py
 
 # Entorno de Python (uv)
 .venv/
