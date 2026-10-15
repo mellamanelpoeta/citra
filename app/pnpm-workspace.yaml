@@ -1,0 +1,10 @@
+# Configuración de pnpm (seguridad de la cadena de suministro).
+# Vercel también lee este archivo, así que aplica igual en local (Docker) y en el deploy.
+
+# No instalar versiones publicadas hace menos de 1 día (minutos).
+# Los paquetes comprometidos suelen detectarse y retirarse en ese lapso.
+minimumReleaseAge: 1440
+
+# pnpm 10 bloquea los scripts de instalación de las dependencias.
+# Solo se permiten los de esta lista (revisar antes de agregar uno).
+onlyBuiltDependencies: []

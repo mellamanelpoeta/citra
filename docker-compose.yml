@@ -1,0 +1,26 @@
+# Frontend dockerizado: en el host no se instala Node, pnpm ni node_modules.
+name: titulacion
+
+services:
+  app:
+    build:
+      context: ./app
+      target: dev
+    ports:
+      - "127.0.0.1:5173:5173"
+    volumes:
+      - ./app:/app
+      - app_node_modules:/app/node_modules
+      - pnpm_store:/pnpm/store
+
+  preview:
+    profiles: ["preview"]
+    build:
+      context: ./app
+      target: preview
+    ports:
+      - "127.0.0.1:4173:4173"
+
+volumes:
+  app_node_modules:
+  pnpm_store:

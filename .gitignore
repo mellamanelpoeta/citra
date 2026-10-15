@@ -1,0 +1,22 @@
+# El repositorio público contiene solo la app (app/) y su entorno Docker.
+# El análisis (pipeline/, lab/), los documentos de trabajo (docs/) y los datos (data/) se quedan en local.
+# Los datos que consume la app viven en app/public/data/ y sí se versionan.
+/pipeline/
+/lab/
+/docs/
+/data/
+/slides/
+/paper/
+/CLAUDE.md
+/.claude/
+
+# Entorno de Python (uv)
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Sistema y editor
+.DS_Store
+.vscode/
+*.swp

@@ -1,0 +1,13 @@
+{
+  "name": "Frontend (app/)",
+  "dockerComposeFile": ["../../docker-compose.yml"],
+  "service": "app",
+  "workspaceFolder": "/app",
+  "overrideCommand": false,
+  "remoteUser": "node",
+  "customizations": {
+    "vscode": {
+      "extensions": ["bradlc.vscode-tailwindcss"]
+    }
+  }
+}
