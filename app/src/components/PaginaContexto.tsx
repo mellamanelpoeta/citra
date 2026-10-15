@@ -279,7 +279,7 @@ export default function PaginaContexto() {
               respuesta={
                 <>
                   Contamos los negocios con un censo anterior al robo analizado y seguimos a cada negocio de 2018 a 2023: donde había más
-                  robo no cerraron más negocios y abrieron un poco más. Reportamos asociaciones, no causas.
+                  robo en 2016–2018 no cerraron más negocios y abrieron un poco más. Reportamos asociaciones, no causas.
                 </>
               }
             />
@@ -336,12 +336,12 @@ export default function PaginaContexto() {
                 <PruebaGrafica titulo="Los negocios se cuentan antes del robo" grafica={<GraficaCorte />}>
                   El DENUE se renueva por completo solo con cada Censo Económico; entre censos casi no cambia (sale el 4% de los negocios y
                   entra el 6%). Por eso el 94% de los negocios del DENUE de noviembre de 2023 son los del censo de 2019, anterior al robo
-                  analizado. Con los negocios de 2016 la relación entre robo y negocios casi no cambia.
+                  analizado. Con los negocios de enero de 2016, anteriores a todo el robo analizado, la relación entre robo y negocios casi no cambia.
                 </PruebaGrafica>
                 <PruebaGrafica titulo="Cierres y aperturas" grafica={<GraficaSalidas />}>
                   El recambio real aparece al llegar el censo de 2024: en cinco años sale el 35% de los negocios y entran otros tantos (33%),
                   como en la Demografía de los Negocios del INEGI. Cambian los negocios, no cuántos hay: el tamaño comercial de cada zona
-                  casi no se mueve (correlación 0.99 entre 2019 y 2024). En las zonas con más robo previo sale la misma proporción.
+                  casi no se mueve (correlación 0.99 entre 2019 y 2024). En las zonas con más robo previo (2016–2018) sale la misma proporción.
                 </PruebaGrafica>
                 <PruebaGrafica titulo="Aperturas, saldo y rotación" grafica={<GraficaFlujos />}>
                   Con controles, esas zonas pierden la misma proporción de negocios (razón 0.99, IC 0.98–1.01), reciben un poco más de
@@ -369,12 +369,17 @@ export default function PaginaContexto() {
                 <span className="velo rounded-lg px-2.5 py-1.5 text-slate-100">Robos denunciados</span>
                 <span className="text-slate-500">÷</span>
                 <span className="velo rounded-lg px-2.5 py-1.5 text-slate-100">Robos esperados por su actividad</span>
-                <span className="text-slate-500">=</span>
+                <span className="text-slate-500">→</span>
+                <span className="velo rounded-lg px-2.5 py-1.5 text-slate-100">Ajuste por evidencia</span>
+                <span className="text-slate-500">→</span>
                 <span className="rounded-lg border border-accent/40 bg-accent/10 px-2.5 py-1.5 font-medium text-accent">Riesgo ajustado</span>
               </div>
               <p className="mt-3 text-slate-400">
-                Arriba de ×1, la zona tiene más robo del que le corresponde. Con pocos robos, el riesgo se acerca a ×1 para no confundir una
-                casualidad con un foco. La lista mira al año siguiente ({meta.anticipado.anio}) y da más peso a los años recientes.
+                Arriba de ×1, la zona tiene más robo del que le corresponde. Pero con pocos robos la división engaña: si una zona espera
+                medio robo y tiene 2, sale ×4, y con uno menos bajaría a ×2. Por eso cada zona se combina con lo típico de la ciudad (×1)
+                según cuánta evidencia tiene: si espera muchos robos, manda su propio dato; si espera pocos, se acerca a ×1. Cuánto acercarla lo aprendemos
+                de cómo varían los robos en toda la ciudad. La lista mira al año siguiente ({meta.anticipado.anio}) y da más peso a los años
+                recientes.
               </p>
             </div>
             {ej && zonaEj && (
@@ -383,14 +388,18 @@ export default function PaginaContexto() {
                 <div className="mt-1 font-semibold text-slate-100">
                   {nombrePropio(zonaEj.colonia)} <span className="font-normal text-slate-400">· {zonaEj.alcaldia}</span>
                 </div>
-                <div className="mt-3 grid grid-cols-3 gap-2 text-center">
+                <div className="mt-3 grid grid-cols-4 gap-2 text-center">
                   <div>
                     <div className="text-xl font-semibold tabular-nums text-slate-100">{decimal(ej.m.observados)}</div>
                     <div className="text-[11px] text-slate-400">robos al año (recientes)</div>
                   </div>
                   <div>
                     <div className="text-xl font-semibold tabular-nums text-slate-300">{decimal(ej.m.esperados)}</div>
-                    <div className="text-[11px] text-slate-400">esperados dadas sus características </div>
+                    <div className="text-[11px] text-slate-400">esperados dadas sus características</div>
+                  </div>
+                  <div>
+                    <div className="text-xl font-semibold tabular-nums text-slate-300">×{entero(ej.m.observados / ej.m.esperados)}</div>
+                    <div className="text-[11px] text-slate-400">riesgo directo</div>
                   </div>
                   <div>
                     <div className="text-xl font-semibold tabular-nums text-orange-300">×{decimal(ej.m.rr)}</div>
@@ -398,6 +407,10 @@ export default function PaginaContexto() {
                   </div>
                 </div>
                 <p className="mt-3 text-xs text-slate-400">
+                  Espera solo {decimal(ej.m.esperados)} robos al año: con tan poca evidencia, su ×{entero(ej.m.observados / ej.m.esperados)} se
+                  acerca a ×1 y queda en ×{decimal(ej.m.rr)}. Aun así sigue muy arriba.
+                </p>
+                <p className="mt-2 text-xs text-slate-400">
                   Por conteo ocupa el puesto {entero(ej.m.rank_conteo)}: no entraría entre las {nTop} zonas con más robos. Por riesgo ajustado es
                   de las primeras.{" "}
                   <span style={{ color: COLOR_NUEVO }}>

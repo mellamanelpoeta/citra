@@ -10,7 +10,7 @@ const ETIQUETA_NIVEL: Record<CategoriaRiesgo, string> = { por_debajo: "Menos", d
 
 // Vista del pequeño negocio: lenguaje llano y sin números técnicos.
 export default function PanelConsulta() {
-  const { colonias, coloniaPorId, giros } = useData();
+  const { colonias, coloniaPorId, giros, prioridadPorId, meta } = useData();
   const { coloniaSel, giroSel, seleccionarColonia, setGiro } = useApp();
   const [q, setQ] = useState("");
 
@@ -34,6 +34,9 @@ export default function PanelConsulta() {
 
   const col = coloniaSel ? coloniaPorId.get(coloniaSel) : undefined;
   const giro = giros.find((g) => g.id === giroSel);
+  // La categoría de la colonia promedia sus AGEB (O y Ê sumados): una colonia "dentro" o "por debajo" puede contener AGEB de
+  // la lista de prioridades. Se avisa para que la consulta no contradiga a "¿Qué priorizar?".
+  const enLista = col && col.categoria !== "por_encima" ? col.agebs.filter((a) => prioridadPorId.has(a)).length : 0;
   const elegir = (id: string) => {
     seleccionarColonia(id, coloniaPorId.get(id)?.bbox);
     setQ("");
@@ -106,6 +109,20 @@ export default function PanelConsulta() {
               ))}
             </div>
           </Tarjeta>
+
+          {enLista > 0 && (
+            <Tarjeta className="mt-2">
+              <p className="text-sm font-medium leading-snug" style={{ color: COLOR_CATEGORIA.por_encima }}>
+                {enLista === 1 ? "Una zona de tu colonia está" : `${enLista} zonas de tu colonia están`} en la lista de prioridades de{" "}
+                {meta.anticipado.anio}
+              </p>
+              <p className="mt-1 text-sm text-slate-400">
+                Tu colonia en conjunto tiene {col.categoria === "dentro" ? "los robos que se esperarían" : "menos robos de los que se esperarían"}, pero
+                en {enLista === 1 ? "esa zona" : "esas zonas"} (grupos de algunas manzanas) se denuncian más robos de los que les corresponden por
+                su actividad. Al juntar toda la colonia, esas zonas se compensan con las que están tranquilas.
+              </p>
+            </Tarjeta>
+          )}
 
           {giro && (
             <Tarjeta className="mt-2">

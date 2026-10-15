@@ -145,8 +145,8 @@ export default function PanelAnormal() {
               </p>
               <p>
                 Frente al resto del comercio al por menor, los de alto efectivo tradicional (abarrotes, tortillerías) tienen el mismo robo
-                con violencia, pero menos sin violencia, el que depende de denunciar: parece que denuncian menos, quizá por falta de los
-                mecanismos y protocolos que los giros formales sí tienen.
+                con violencia, pero menos sin violencia. Si fueran zonas más seguras, bajarían los dos: puede ser que denuncien menos ese
+                robo, quizá por falta de los mecanismos y protocolos que los giros formales sí tienen, o que el mostrador lo dificulte.
               </p>
             </div>
             <div className="mt-3">

@@ -190,7 +190,7 @@ const IRR_GIRO = [
   { grupo: "Manufactura", efectivo: false, con: [1.2, 1.01, 1.33], sin: [0.84, 0.68, 0.95] },
 ];
 
-// Con violencia frente a sin violencia (depende de denunciar), contra la línea de 1. Los dos
+// Con violencia frente a sin violencia, contra la línea de 1. Los dos
 // grupos de efectivo arriba; el resto del tejido económico debajo de una línea, como comparación.
 export function GraficaGiro() {
   const W = 320;

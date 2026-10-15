@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { decimal, decimal2 } from "../lib/format";
 
 // Gráficas pequeñas de las pruebas de causalidad (página Contexto): ¿el robo ahuyenta negocios? Cifras escritas a mano
@@ -7,6 +8,16 @@ const ACENTO = "#38bdf8";
 const GRIS = "#94a3b8";
 const VIOLENCIA = "#f87171";
 const REJILLA = "rgb(255 255 255 / 0.06)";
+
+// Título de la gráfica arriba, en HTML: se ajusta al ancho en vez de cortarse como un <text> del SVG.
+function Figura({ titulo, children }: { titulo: string; children: ReactNode }) {
+  return (
+    <figure>
+      <figcaption className="mb-1.5 text-[13px] leading-snug font-medium text-slate-300">{titulo}</figcaption>
+      {children}
+    </figure>
+  );
+}
 
 type Fila = { etiqueta: string; valor: number; lo: number; hi: number; color?: string };
 
@@ -23,42 +34,41 @@ function Intervalos({ filas, dominio, marcas, referencia, textoReferencia, forma
 }) {
   const W = 320;
   const fila = 20;
-  const m = { l: 108, r: 14, t: 16, b: 26 };
+  const m = { l: 108, r: 14, t: 16, b: 16 };
   const H = m.t + filas.length * fila + m.b;
   const x = (v: number) => m.l + ((v - dominio[0]) / (dominio[1] - dominio[0])) * (W - m.l - m.r);
   const y = (i: number) => m.t + i * fila + fila / 2;
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label={aria}>
-      {marcas.map((v) => (
-        <g key={v}>
-          <line x1={x(v)} x2={x(v)} y1={m.t} y2={H - m.b} stroke={v === referencia ? GRIS : REJILLA} strokeDasharray={v === referencia ? "3 2" : undefined} />
-          <text x={x(v)} y={H - m.b + 10} textAnchor="middle" className="fill-slate-500 text-[8px]">
-            {formato(v)}
-          </text>
-        </g>
-      ))}
-      <text x={x(referencia)} y={m.t - 5} textAnchor="middle" className="fill-slate-300 text-[8px]">
-        {textoReferencia}
-      </text>
-      {filas.map((f, i) => {
-        const color = f.color ?? ACENTO;
-        return (
-          <g key={f.etiqueta}>
-            <text x={m.l - 5} y={y(i) + 3} textAnchor="end" className="fill-slate-400 text-[8px]">
-              {f.etiqueta}
-            </text>
-            <line x1={x(f.lo)} x2={x(f.hi)} y1={y(i)} y2={y(i)} stroke={color} strokeOpacity={0.5} strokeWidth={1.5} />
-            <circle cx={x(f.valor)} cy={y(i)} r={2.6} fill={color} />
-            <text x={x(f.hi) + 4} y={y(i) + 3} className="fill-slate-200 text-[8px] font-semibold">
-              {formato(f.valor)}
+    <Figura titulo={eje}>
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label={aria}>
+        {marcas.map((v) => (
+          <g key={v}>
+            <line x1={x(v)} x2={x(v)} y1={m.t} y2={H - m.b} stroke={v === referencia ? GRIS : REJILLA} strokeDasharray={v === referencia ? "3 2" : undefined} />
+            <text x={x(v)} y={H - m.b + 10} textAnchor="middle" className="fill-slate-500 text-[8px]">
+              {formato(v)}
             </text>
           </g>
-        );
-      })}
-      <text x={(m.l + W - m.r) / 2} y={H - 3} textAnchor="middle" className="fill-slate-500 text-[8px]">
-        {eje}
-      </text>
-    </svg>
+        ))}
+        <text x={x(referencia)} y={m.t - 5} textAnchor="middle" className="fill-slate-300 text-[8px]">
+          {textoReferencia}
+        </text>
+        {filas.map((f, i) => {
+          const color = f.color ?? ACENTO;
+          return (
+            <g key={f.etiqueta}>
+              <text x={m.l - 5} y={y(i) + 3} textAnchor="end" className="fill-slate-400 text-[8px]">
+                {f.etiqueta}
+              </text>
+              <line x1={x(f.lo)} x2={x(f.hi)} y1={y(i)} y2={y(i)} stroke={color} strokeOpacity={0.5} strokeWidth={1.5} />
+              <circle cx={x(f.valor)} cy={y(i)} r={2.6} fill={color} />
+              <text x={x(f.hi) + 4} y={y(i) + 3} className="fill-slate-200 text-[8px] font-semibold">
+                {formato(f.valor)}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+    </Figura>
   );
 }
 
@@ -87,7 +97,7 @@ export function GraficaCorte() {
       referencia={2}
       textoReferencia="proporcional"
       formato={(v) => `×${decimal2(v)}`}
-      eje="Duplicar los negocios multiplica el robo por… (IC 95%)"
+      eje="Cuánto se multiplica el robo al duplicar los negocios (IC 95%)"
       aria="Relación entre robo y negocios con los negocios de 2023 y de 2016"
     />
   );
@@ -107,8 +117,8 @@ const FLUJOS_QUINTIL = [
 // Pares de barras por quintil: las salidas son planas; las entradas suben en las zonas con más robo previo.
 export function GraficaSalidas() {
   const W = 320;
-  const H = 112;
-  const m = { l: 22, r: 10, t: 22, b: 30 };
+  const H = 100;
+  const m = { l: 22, r: 10, t: 22, b: 18 };
   const y = (v: number) => H - m.b - (v / 40) * (H - m.t - m.b);
   const ancho = (W - m.l - m.r) / FLUJOS_QUINTIL.length;
   const series = [
@@ -116,45 +126,44 @@ export function GraficaSalidas() {
     { clave: "entran" as const, etiqueta: "Entran", color: ACENTO, dx: 0.19 },
   ];
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label="Porcentaje de negocios que salen y que entran según el robo previo de la zona">
-      {[0, 20, 40].map((v) => (
-        <g key={v}>
-          <line x1={m.l} x2={W - m.r} y1={y(v)} y2={y(v)} stroke={REJILLA} />
-          <text x={m.l - 4} y={y(v) + 2.5} textAnchor="end" className="fill-slate-500 text-[8px]">
-            {v}%
-          </text>
-        </g>
-      ))}
-      {FLUJOS_QUINTIL.map((q, i) => {
-        const xc = m.l + ancho * (i + 0.5);
-        return (
-          <g key={q.rr}>
-            {series.map((s) => (
-              <g key={s.clave}>
-                <rect x={xc + s.dx * ancho - ancho * 0.17} y={y(q[s.clave])} width={ancho * 0.34} height={y(0) - y(q[s.clave])} rx={2} fill={s.color} fillOpacity={0.85} />
-                <text x={xc + s.dx * ancho} y={y(q[s.clave]) - 3} textAnchor="middle" className="fill-slate-200 text-[7.5px] font-semibold">
-                  {Math.round(q[s.clave])}
-                </text>
-              </g>
-            ))}
-            <text x={xc} y={y(0) + 10} textAnchor="middle" className="fill-slate-400 text-[8px]">
-              riesgo ×{decimal(q.rr)}
+    <Figura titulo="% de los negocios de 2019 que salen o entran hacia 2024, por robo previo (2016–2018)">
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label="Porcentaje de negocios que salen y que entran según el robo previo de la zona">
+        {[0, 20, 40].map((v) => (
+          <g key={v}>
+            <line x1={m.l} x2={W - m.r} y1={y(v)} y2={y(v)} stroke={REJILLA} />
+            <text x={m.l - 4} y={y(v) + 2.5} textAnchor="end" className="fill-slate-500 text-[8px]">
+              {v}%
             </text>
           </g>
-        );
-      })}
-      {series.map((s, i) => (
-        <g key={s.clave} transform={`translate(${m.l + 4 + i * 48} 9)`}>
-          <rect x={0} y={-6} width={7} height={7} rx={1.5} fill={s.color} fillOpacity={0.85} />
-          <text x={10} y={0} className="fill-slate-400 text-[8px]">
-            {s.etiqueta}
-          </text>
-        </g>
-      ))}
-      <text x={(m.l + W - m.r) / 2} y={H - 4} textAnchor="middle" className="fill-slate-500 text-[8px]">
-        % de los negocios de 2019 que salen o entran hacia 2024, de menos a más robo previo
-      </text>
-    </svg>
+        ))}
+        {FLUJOS_QUINTIL.map((q, i) => {
+          const xc = m.l + ancho * (i + 0.5);
+          return (
+            <g key={q.rr}>
+              {series.map((s) => (
+                <g key={s.clave}>
+                  <rect x={xc + s.dx * ancho - ancho * 0.17} y={y(q[s.clave])} width={ancho * 0.34} height={y(0) - y(q[s.clave])} rx={2} fill={s.color} fillOpacity={0.85} />
+                  <text x={xc + s.dx * ancho} y={y(q[s.clave]) - 3} textAnchor="middle" className="fill-slate-200 text-[7.5px] font-semibold">
+                    {Math.round(q[s.clave])}
+                  </text>
+                </g>
+              ))}
+              <text x={xc} y={y(0) + 10} textAnchor="middle" className="fill-slate-400 text-[8px]">
+                riesgo ×{decimal(q.rr)}
+              </text>
+            </g>
+          );
+        })}
+        {series.map((s, i) => (
+          <g key={s.clave} transform={`translate(${m.l + 4 + i * 48} 9)`}>
+            <rect x={0} y={-6} width={7} height={7} rx={1.5} fill={s.color} fillOpacity={0.85} />
+            <text x={10} y={0} className="fill-slate-400 text-[8px]">
+              {s.etiqueta}
+            </text>
+          </g>
+        ))}
+      </svg>
+    </Figura>
   );
 }
 
@@ -175,7 +184,7 @@ export function GraficaFlujos() {
       referencia={1}
       textoReferencia="igual que las demás"
       formato={decimal2}
-      eje="Zonas con 2.2 veces más riesgo previo frente a las demás (IC 95%)"
+      eje="Zonas con 2.2 veces más riesgo en 2016–2018 que las demás (IC 95%)"
       aria="Razón de salidas, entradas y saldo de negocios según el riesgo previo"
     />
   );
@@ -199,7 +208,7 @@ export function GraficaBajasTamano() {
       referencia={1}
       textoReferencia="igual que las demás"
       formato={decimal2}
-      eje="Bajas entre censos, zonas con 2.2 veces más riesgo previo (IC 95%)"
+      eje="Bajas entre censos, zonas con 2.2 veces más riesgo 2016–18 (IC 95%)"
       aria="Razón de bajas de negocios entre censos por tamaño según el riesgo previo"
     />
   );
