@@ -1,0 +1,46 @@
+delito_norm,categoria_delito,grupo,objetivo,farderos,justificacion
+ROBO A TRANSEUNTE EN CINE CON VIOLENCIA,DELITO DE BAJO IMPACTO,transeunte_en_lugar,ampliado,0,Ídem en cine. Marginal (1 caso).
+ROBO A TRANSEUNTE EN HOTEL CON VIOLENCIA,DELITO DE BAJO IMPACTO,transeunte_en_lugar,ampliado,0,Ídem en hotel. Marginal.
+ROBO A TRANSEUNTE EN NEGOCIO CON VIOLENCIA,DELITO DE BAJO IMPACTO,transeunte_en_lugar,ampliado,0,"La víctima es un cliente dentro del negocio, no el negocio: no entra en V1. Se guarda como 'ampliado' para la sensibilidad, porque no es vía pública."
+ROBO A TRANSEUNTE EN PARQUES Y MERCADOS CON VIOLENCIA,DELITO DE BAJO IMPACTO,transeunte_en_lugar,ampliado,0,"Se cuadruplica entre 2019 y 2021 (327 → 1,388) por reclasificación: sumarlo a V3 metería un salto artificial. Se deja como 'ampliado'."
+ROBO A TRANSEUNTE EN RESTAURANT CON VIOLENCIA,DELITO DE BAJO IMPACTO,transeunte_en_lugar,ampliado,0,Cliente dentro de un restaurante (no es el negocio ni la vía pública). 'Ampliado'.
+ROBO A TRANSEUNTE EN TERMINAL DE PASAJEROS CON VIOLENCIA,DELITO DE BAJO IMPACTO,transeunte_en_lugar,ampliado,0,Ídem en terminal. Marginal.
+DANO EN PROPIEDAD AJENA INTENCIONAL A NEGOCIO,DELITO DE BAJO IMPACTO,dano_negocio,excluir,0,"No es robo. Solo aparece en los CSV, no en el parquet de la API."
+EXTORSION,DELITO DE BAJO IMPACTO,extorsion,excluir,0,Fuera de alcance: cifra oculta extrema (ENVE 96.5% nacional) y el lugar registrado no es el del hecho (llamada).
+SECUESTRO EXPRESS (PARA COMETER ROBO O EXTORSION),DELITO DE BAJO IMPACTO,extorsion,excluir,0,"Fuera de alcance (no es robo a negocio ni en vía pública). Solo aparece en los CSV, no en el parquet de la API."
+TENTATIVA DE EXTORSION,DELITO DE BAJO IMPACTO,extorsion,excluir,0,Ídem.
+ROBO A OFICINA PUBLICA CON VIOLENCIA,ROBO A NEGOCIO CON VIOLENCIA,oficina_publica,excluir,0,"Se excluye: una oficina de gobierno no es actividad económica privada ni usuaria de SEDECO, aunque la FGJ la incluya en la categoría oficial de robo a negocio c/v."
+ROBO A TRANSEUNTE A BORDO DE TAXI PUBLICO Y PRIVADO CON VIOLENCIA,ROBO A PASAJERO A BORDO DE TAXI CON VIOLENCIA,transeunte_taxi,excluir,0,"Se excluye: ocurre en movimiento, así que la coordenada no representa el entorno comercial. Además la categoría oficial es 'pasajero a bordo de taxi'."
+ROBO A TRANSEUNTE A BORDO DE TAXI PUBLICO Y PRIVADO SIN VIOLENCIA,DELITO DE BAJO IMPACTO,transeunte_taxi,excluir,0,Ídem.
+ROBO A TRANSEUNTE CONDUCTOR DE TAXI PUBLICO Y PRIVADO CON VIOLENCIA,DELITO DE BAJO IMPACTO,transeunte_taxi,excluir,0,"Se excluye: la víctima es el conductor, en movimiento."
+ROBO A NEGOCIO CON VIOLENCIA,ROBO A NEGOCIO CON VIOLENCIA,negocio_cv,negocio,0,Núcleo de la variable: robo con violencia cuya víctima es el establecimiento. Existe con el mismo nombre en todo el periodo.
+ROBO A NEGOCIO Y VEHICULO CON VIOLENCIA,ROBO A NEGOCIO CON VIOLENCIA,negocio_cv,negocio,0,Robo al negocio con robo adicional de vehículo; la víctima principal sigue siendo el negocio. Marginal (<35/año).
+ROBO A NEGOCIO CON VIOLENCIA POR FARDEROS (TIENDAS DE AUTOSERVICIO),ROBO A NEGOCIO CON VIOLENCIA,negocio_cv_farderos,negocio,1,Subtipo creado en 2020 al separar a los farderos; antes estaba dentro de robo a negocio genérico. Entra en V1 y sale de V2.
+ROBO A NEGOCIO CON VIOLENCIA POR FARDEROS (TIENDAS DE CONVENIENCIA),ROBO A NEGOCIO CON VIOLENCIA,negocio_cv_farderos,negocio,1,"Subtipo de 2020 con un pico atípico ese año (1,434) que en 2021 se reabsorbe en negocio_cv genérico: artefacto de clasificación. Entra en V1 y sale de V2."
+ROBO A NEGOCIO (NOMINA) Y VEHICULO CON VIOLENCIA,ROBO A NEGOCIO CON VIOLENCIA,negocio_cv_otros,negocio,0,Robo de nómina dentro del negocio: la víctima es el establecimiento. Marginal (1 caso); se conserva por consistencia con la categoría oficial.
+ROBO A SUCURSAL BANCARIA (ASALTO BANCARIO) CON VIOLENCIA,ROBO A NEGOCIO CON VIOLENCIA,negocio_cv_otros,negocio,0,"Variante anterior a 2019 (2016–2018, solo en la API) de robo a sucursal bancaria; mismo grupo que su equivalente vigente. No afecta al periodo 2019–2024."
+ROBO A SUCURSAL BANCARIA (SUPERMERCADO) CON VIOLENCIA,ROBO A NEGOCIO CON VIOLENCIA,negocio_cv_otros,negocio,0,"Variante anterior a 2019 (2016–2018, solo en la API) de robo a sucursal bancaria dentro de autoservicio; mismo grupo que su equivalente vigente. No afecta al periodo 2019–2024."
+ROBO A SUCURSAL BANCARIA CON VIOLENCIA,ROBO A NEGOCIO CON VIOLENCIA,negocio_cv_otros,negocio,0,La sucursal bancaria es un establecimiento del DENUE (SCIAN 5221) y la FGJ la clasifica en robo a negocio c/v. Marginal (<35/año).
+ROBO A SUCURSAL BANCARIA DENTRO DE TIENDAS DE AUTOSERVICIO CON VIOLENCIA,ROBO A NEGOCIO CON VIOLENCIA,negocio_cv_otros,negocio,0,Ídem sucursal bancaria. Marginal (<10/año).
+ROBO DE VEHICULO Y NOMINA CON VIOLENCIA,ROBO A NEGOCIO CON VIOLENCIA,negocio_cv_otros,negocio,0,"Variante anterior a 2019 (2016–2018, solo en la API) de robo a nómina; mismo grupo que su equivalente vigente. No afecta al periodo 2019–2024."
+ROBO DURANTE TRASLADO DE VALORES (NOMINA) CON VIOLENCIA,ROBO A NEGOCIO CON VIOLENCIA,negocio_cv_otros,negocio,0,La FGJ lo clasifica en robo a negocio c/v; la víctima es una empresa. Marginal (<10/año).
+ROBO EN INTERIOR DE EMPRESA (NOMINA) CON VIOLENCIA,ROBO A NEGOCIO CON VIOLENCIA,negocio_cv_otros,negocio,0,Robo dentro de una empresa: la víctima es el establecimiento. Marginal (<10/año).
+ROBO A NEGOCIO SIN VIOLENCIA,DELITO DE BAJO IMPACTO,negocio_sv,negocio,0,"Núcleo de la variable: robo sin violencia al establecimiento. Su caída de 15,758 (2019) a 4,471 (2020) se explica por la creación de los subtipos de farderos y 'S/V dentro de negocios': por eso V1 usa el agregado."
+ROBO A NEGOCIO Y VEHICULO SIN VIOLENCIA,DELITO DE BAJO IMPACTO,negocio_sv,negocio,0,Robo al negocio con robo adicional de vehículo. Marginal (<20/año).
+"ROBO S/V DENTRO DE NEGOCIOS, AUTOSERVICIOS, CONVENIENCIA",DELITO DE BAJO IMPACTO,negocio_sv_dentro,negocio,0,"Creado en 2020 (15 → 974 casos). No dice si la víctima es el negocio o un cliente, y su lugar (autoservicios, conveniencia) coincide con el de los farderos. Entra en V1 y V2 por su categoría oficial, pero se aísla como grupo propio para la sensibilidad de S1."
+ROBO A NEGOCIO SIN VIOLENCIA POR FARDEROS,DELITO DE BAJO IMPACTO,negocio_sv_farderos,negocio,1,"Farderos genérico, creado en 2020 y en crecimiento (7 → 2,677): absorbe parte de los subtipos de autoservicio. Entra en V1 y sale de V2."
+ROBO A NEGOCIO SIN VIOLENCIA POR FARDEROS (TIENDAS DE AUTOSERVICIO),DELITO DE BAJO IMPACTO,negocio_sv_farderos,negocio,1,"Subtipo principal de farderos (~6k/año en 2020–2021), concentrado en supermercados que denuncian sistemáticamente. Entra en V1 y sale de V2."
+ROBO A NEGOCIO SIN VIOLENCIA POR FARDEROS (TIENDAS DE CONVENIENCIA),DELITO DE BAJO IMPACTO,negocio_sv_farderos,negocio,1,"Subtipo de 2020 con un pico ese año (1,404) que después cae a ~100–190. Entra en V1 y sale de V2."
+ROBO A TRANSEUNTE SALIENDO DEL BANCO CON VIOLENCIA,ROBO A CUENTAHABIENTE SALIENDO DEL CAJERO CON VIOLENCIA,cuentahabiente,via_publica,0,Categoría oficial 'robo a cuentahabiente': robo en la calle ligado a la actividad financiera.
+ROBO A TRANSEUNTE SALIENDO DEL CAJERO CON VIOLENCIA,ROBO A CUENTAHABIENTE SALIENDO DEL CAJERO CON VIOLENCIA,cuentahabiente,via_publica,0,Ídem.
+ROBO A REPARTIDOR CON VIOLENCIA,ROBO A REPARTIDOR CON Y SIN VIOLENCIA,repartidor,via_publica,0,"El repartidor es parte de la operación comercial y el robo ocurre en la calle. Categoría oficial propia, estable en el tiempo."
+ROBO A REPARTIDOR SIN VIOLENCIA,ROBO A REPARTIDOR CON Y SIN VIOLENCIA,repartidor,via_publica,0,Ídem (modalidad sin violencia).
+ROBO A REPARTIDOR Y VEHICULO CON VIOLENCIA,ROBO A REPARTIDOR CON Y SIN VIOLENCIA,repartidor,via_publica,0,"Ídem, con robo de vehículo."
+ROBO A REPARTIDOR Y VEHICULO SIN VIOLENCIA,ROBO A REPARTIDOR CON Y SIN VIOLENCIA,repartidor,via_publica,0,Ídem. Marginal.
+ROBO A TRANSEUNTE DE CELULAR CON VIOLENCIA,DELITO DE BAJO IMPACTO,transeunte_via_publica,via_publica,0,"Prácticamente desaparece en 2020 (677 → 0), absorbido por 'vía pública'. Incluirlo mantiene comparable la serie de V3."
+ROBO A TRANSEUNTE DE CELULAR SIN VIOLENCIA,DELITO DE BAJO IMPACTO,transeunte_via_publica,via_publica,0,Ídem (403 → 68).
+ROBO A TRANSEUNTE EN VIA PUBLICA (NOMINA) CON VIOLENCIA,ROBO A TRANSEUNTE EN VIA PUBLICA CON Y SIN VIOLENCIA,transeunte_via_publica,via_publica,0,Robo en la calle; categoría oficial de vía pública. Marginal (<6/año).
+ROBO A TRANSEUNTE EN VIA PUBLICA (NOMINA) SIN VIOLENCIA,ROBO A TRANSEUNTE EN VIA PUBLICA CON Y SIN VIOLENCIA,transeunte_via_publica,via_publica,0,Ídem. Marginal (≤1/año).
+ROBO A TRANSEUNTE EN VIA PUBLICA CON VIOLENCIA,ROBO A TRANSEUNTE EN VIA PUBLICA CON Y SIN VIOLENCIA,transeunte_via_publica,via_publica,0,"Núcleo de V3: robo a persona en la calle, indicador del riesgo que enfrentan los clientes y el flujo comercial."
+ROBO A TRANSEUNTE EN VIA PUBLICA SIN VIOLENCIA,ROBO A TRANSEUNTE EN VIA PUBLICA CON Y SIN VIOLENCIA,transeunte_via_publica,via_publica,0,Núcleo de V3 (modalidad sin violencia).
+ROBO A TRANSEUNTE Y VEHICULO CON VIOLENCIA,DELITO DE BAJO IMPACTO,transeunte_via_publica,via_publica,0,Robo en la calle con vehículo. Marginal (≤5/año).
